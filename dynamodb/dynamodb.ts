@@ -1,8 +1,9 @@
+// @deno-types="npm:@types/uuid"
 import { v4 as uuid } from "npm:uuid";
 
 import type { DynamodbClient, DynamoObject } from "./deps.ts";
 
-import { uuidRootForHashRange } from "../uuidUtil.ts";
+import { uuidRootForHashRange } from "./uuid.ts";
 import idCodec from "./idCodec.ts";
 
 import type {
@@ -36,7 +37,7 @@ const randomInt = (min: number, max: number): number => {
   return min + Math.floor((max - min) * n);
 };
 
-const create = <T extends DynamoObject>({
+export const dynamoDriver = <T extends DynamoObject>({
   client,
   table,
   hashRange,
@@ -191,5 +192,3 @@ const create = <T extends DynamoObject>({
     deleteBatch,
   };
 };
-
-export default create;

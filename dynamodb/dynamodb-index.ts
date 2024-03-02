@@ -1,8 +1,9 @@
+// @deno-types="npm:@types/uuid"
 import { v4 as uuid } from "npm:uuid";
 
 import type { DynamodbClient } from "./deps.ts";
 
-import { uuidRootForHashRange } from "../uuidUtil.ts";
+import { uuidRootForHashRange } from "./uuid.ts";
 import idCodec from "./idCodec.ts";
 
 import type {
@@ -32,7 +33,7 @@ export interface DynamoIndexDriverOptions {
   };
 }
 
-const create = <T>({
+export const dynamoIndexDriver = <T>({
   client,
   table,
   hashRange,
@@ -63,7 +64,7 @@ const create = <T>({
   ): Promise<WithId<T>[]> => {
     const sortFactor = Math.random();
     const scanForward = sortFactor < 0.5;
-    const id = uuidRootForHashRange(await uuid(), hashRange);
+    const id = uuidRootForHashRange(uuid(), hashRange);
     const idValue = `${idPrefix}:${id}`;
 
     const result = await client.query(table, {
@@ -123,5 +124,3 @@ const create = <T>({
     scan,
   };
 };
-
-export default create;
