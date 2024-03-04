@@ -103,7 +103,15 @@ export const dynamoIndexDriver = <T>({
           cond: "begins_with",
         },
       },
-      startKey: startKey !== undefined ? publicId.decode(startKey) : undefined,
+      ...(startKey
+        ? {
+          startKey: {
+            // [idKey]: startId,
+            ...publicId.decode(startKey),
+            [indexKey]: indexValue,
+          },
+        }
+        : {}),
       limit,
     });
 
